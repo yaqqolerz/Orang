@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class SettingsManager : MonoBehaviour
 {
@@ -8,6 +9,10 @@ public class SettingsManager : MonoBehaviour
 
     private const string VolumePrefKey = "VolumePref";
     private const string MutePrefKey = "MutePref";
+
+    public Sprite muteSprite;
+    public Sprite unmuteSprite;
+    public Image muteButtonImage;
 
     private float currentVolume;
     private bool isMuted;
@@ -35,6 +40,7 @@ public class SettingsManager : MonoBehaviour
         isMuted = isMute;
         audioMixer.SetFloat("Volume", isMuted ? -80 : currentVolume);
         PlayerPrefs.SetInt(MutePrefKey, isMuted ? 1 : 0);
+        muteButtonImage.sprite = isMuted ? muteSprite : unmuteSprite;
     }
 
     private void LoadSettings()
@@ -64,8 +70,5 @@ public class SettingsManager : MonoBehaviour
         SceneManager.LoadScene("Main");
     }
 
-   /* public void ApplySettings()
-    {
-        
-    }*/
+
 }

@@ -503,7 +503,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: Main
+          m_StringArgument: Gameplay
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &286199050
@@ -1225,7 +1225,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 24300002, guid: 870fa0bdbfae8c048a4c15473e5a40d3, type: 2}
-  m_audioClip: {fileID: 8300000, guid: e91f0a83ff562e84eab1935a311d2936, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 33de6b5943ecb57419495a4deb5805bd, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1

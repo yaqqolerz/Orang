@@ -3,6 +3,7 @@ using TMPro;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Audio;
 using UnityEngine.SceneManagement;
 
 public enum Choice
@@ -34,6 +35,14 @@ public class GameMan : MonoBehaviour
     public int playerScore;
     public int enemyScore;
     public GameObject Block;
+    public AudioSource QD;
+    public AudioSource Draw;
+    public AudioSource Backsound;
+    public AudioClip[] win;
+    public AudioClip[] lose;
+    public AudioSource wins;
+    public AudioSource loss;
+    public AudioSource REALWIN;
 
     public Transform playerChoicePosition;
     public Transform enemyChoicePosition;
@@ -53,7 +62,7 @@ public class GameMan : MonoBehaviour
     {
         if (enemyScore >= 5 || playerScore >= 5)
         {
-            resultText.text = "GG GAMING";
+            resultText.text = "Quandale Says GG!";
             restbut.SetActive(true);
             Rockbut.enabled = false;
             Paperbut.enabled = false;
@@ -140,9 +149,10 @@ public class GameMan : MonoBehaviour
         {
             if (playerChoice == enemyChoice)
             {
-                resultText.text = "Cie Samaan";
+                resultText.text = "Same Energy";
                 Destroy(playerChoiceObject, 0.6f);
                 Destroy(enemyChoiceObject, 0.6f);
+                Draw.Play();
             }
             else if (playerChoice != enemyChoice)
             {
@@ -150,63 +160,75 @@ public class GameMan : MonoBehaviour
                 {
                     if (enemyChoice == Choice.Scissors)
                     {
-                        resultText.text = "AWKAWKAW KALAH SAMA BOT";
+                        resultText.text = "Points For Quandale";
                         playerChoiceObject.transform.DOMoveY(playerChoiceObject.transform.position.y - 2f, 0.5f);
                         playerChoiceObject.GetComponent<Rigidbody2D>().AddForce(new Vector2(100f, 100f), ForceMode2D.Force);
                         Destroy(enemyChoiceObject, 0.6f);
                         Destroy(playerChoiceObject, 1.5f);
                         enemyScore++;
+                        loss.clip = lose[Random.Range(0, lose.Length)];
+                        loss.Play();
                     }
                     else
                     {
-                        resultText.text = "Anjay Menang";
+                        resultText.text = "Nice";
                         enemyChoiceObject.transform.DOMoveY(enemyChoiceObject.transform.position.y - 2f, 0.5f);
                         enemyChoiceObject.GetComponent<Rigidbody2D>().AddForce(new Vector2(-100f, 100f), ForceMode2D.Force);
                         Destroy(playerChoiceObject, 0.6f);
                         Destroy(enemyChoiceObject, 1.5f);
                         playerScore++;
+                        wins.clip = win[Random.Range(0, win.Length)];
+                        wins.Play();
                     }
                 }
                 else if (playerChoice == Choice.Scissors)
                 {
                     if (enemyChoice == Choice.Rock)
                     {
-                        resultText.text = "AWKAWKAW KALAH SAMA BOT";
+                        resultText.text = "Points For Quandale";
                         playerChoiceObject.transform.DOMoveY(playerChoiceObject.transform.position.y - 2f, 0.5f);
                         playerChoiceObject.GetComponent<Rigidbody2D>().AddForce(new Vector2(100f, 100f), ForceMode2D.Force);
                         Destroy(enemyChoiceObject, 0.6f);
                         Destroy(playerChoiceObject, 1.5f);
                         enemyScore++;
+                        loss.clip = lose[Random.Range(0, lose.Length)];
+                        loss.Play();
                     }
                     else
                     {
-                        resultText.text = "Anjay Menang";
+                        resultText.text = "Good";
                         enemyChoiceObject.transform.DOMoveY(enemyChoiceObject.transform.position.y - 2f, 0.5f);
                         enemyChoiceObject.GetComponent<Rigidbody2D>().AddForce(new Vector2(-100f, 100f), ForceMode2D.Force);
                         Destroy(playerChoiceObject, 0.6f);
                         Destroy(enemyChoiceObject, 1.5f);
                         playerScore++;
+                        wins.clip = win[Random.Range(0, win.Length)];
+                        wins.Play();
                     }
                 }
                 else
                 {
                     if (enemyChoice == Choice.Paper)
                     {
-                        resultText.text = "AWKAWKAW KALAH SAMA BOT";
+                        resultText.text = "Points For Quandale";
                         playerChoiceObject.transform.DOMoveY(playerChoiceObject.transform.position.y - 2f, 0.5f);
                         playerChoiceObject.GetComponent<Rigidbody2D>().AddForce(new Vector2(100f, 100f), ForceMode2D.Force);
                         Destroy(enemyChoiceObject, 0.6f);
                         Destroy(playerChoiceObject, 1.5f);
                         enemyScore++;
+                        loss.clip = lose[Random.Range(0, lose.Length)];
+                        loss.Play();
                     }
                     else
                     {
-                        resultText.text = "Anjay Menang";
+                        resultText.text = "Keep it up";
                         enemyChoiceObject.transform.DOMoveY(enemyChoiceObject.transform.position.y - 2f, 0.5f);
                         enemyChoiceObject.GetComponent<Rigidbody2D>().AddForce(new Vector2(-100f, 100f), ForceMode2D.Force);
                         Destroy(playerChoiceObject, 0.6f);
                         Destroy(enemyChoiceObject, 1.5f);
                         playerScore++;
+                        wins.clip = win[Random.Range(0, win.Length)];
+                        wins.Play();
                     }
                 }
             }
@@ -218,6 +240,11 @@ public class GameMan : MonoBehaviour
 
     private IEnumerator ResetRound()
     {
+        if (playerScore == 5)
+        {
+            Backsound.Stop();
+            REALWIN.Play();
+        }
         foreach (Transform child in playerChoicePosition)
         {
             Destroy(child.gameObject);
@@ -227,7 +254,7 @@ public class GameMan : MonoBehaviour
             Destroy(child.gameObject);
         }
         yield return new WaitForSeconds(3f);
-        resultText.text = "Pilih atau pala kau ku hantam";
+        resultText.text = "Pick you poison";
     }
 
     public void OnScissorsButton()
@@ -257,7 +284,13 @@ public class GameMan : MonoBehaviour
 
     public void OnRestartButton()
     {
+        Backsound.Play();
+        if (REALWIN.isPlaying)
+        {
+            REALWIN.Stop();
+        }
         resultText.text = "";
+        QD.Play();
         playerScore = 0;
         enemyScore = 0;
         pscore.text = playerScore.ToString();

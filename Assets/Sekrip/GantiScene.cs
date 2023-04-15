@@ -1,18 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GantiScene : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public string namascene;
 
-    // Update is called once per frame
-    void Update()
+    public void pencet(string namascene)
     {
-        
+        SceneManager.LoadScene(namascene);
     }
 }

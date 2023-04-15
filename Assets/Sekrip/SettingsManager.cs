@@ -1,58 +1,71 @@
 using UnityEngine;
 using UnityEngine.Audio;
+using UnityEngine.SceneManagement;
 
 public class SettingsManager : MonoBehaviour
 {
     public AudioMixer audioMixer;
-    private bool isMuted = false;
-    private float volume = 1.0f;
-    private const string MUTE_KEY = "isMuted";
-    private const string VOLUME_KEY = "volume";
-    private const float MIN_VOLUME = 0f;
-    private const float MAX_VOLUME = 1f;
 
-    public void SetPreferences()
+    private const string VolumePrefKey = "VolumePref";
+    private const string MutePrefKey = "MutePref";
+
+    private float currentVolume;
+    private bool isMuted;
+
+    private void Awake()
     {
-        PlayerPrefs.SetInt(MUTE_KEY, isMuted ? 1 : 0);
-        PlayerPrefs.SetFloat(VOLUME_KEY, volume);
+        DontDestroyOnLoad(this);
+        LoadSettings();
+        audioMixer.SetFloat("Volume", currentVolume); 
+        /*ApplySettings();*/
+        GameObject.Find("VolumeSlider").GetComponent<UnityEngine.UI.Slider>().value = currentVolume;
+        GameObject.Find("MuteToggle").GetComponent<UnityEngine.UI.Toggle>().isOn = isMuted;
     }
 
-    public void LoadPreferences()
+    public void SetVolume(float volume)
     {
-        if (PlayerPrefs.HasKey(MUTE_KEY))
+        currentVolume = volume;
+        Debug.Log(currentVolume);
+        audioMixer.SetFloat("Volume", currentVolume);
+        PlayerPrefs.SetFloat(VolumePrefKey, currentVolume);
+    }
+
+    public void SetMute(bool isMute)
+    {
+        isMuted = isMute;
+        audioMixer.SetFloat("Volume", isMuted ? -80 : currentVolume);
+        PlayerPrefs.SetInt(MutePrefKey, isMuted ? 1 : 0);
+    }
+
+    private void LoadSettings()
+    {
+        if (PlayerPrefs.HasKey(VolumePrefKey))
         {
-            isMuted = PlayerPrefs.GetInt(MUTE_KEY) == 1;
+            currentVolume = PlayerPrefs.GetFloat(VolumePrefKey);
+        }
+        else
+        {
+            currentVolume = 0;
         }
 
-        if (PlayerPrefs.HasKey(VOLUME_KEY))
+        if (PlayerPrefs.HasKey(MutePrefKey))
         {
-            volume = PlayerPrefs.GetFloat(VOLUME_KEY);
+            isMuted = PlayerPrefs.GetInt(MutePrefKey) == 1 ? true : false;
+        }
+        else
+        {
+            isMuted = false;
         }
     }
-
-    public void ToggleAudioMute(bool isOn)
+    public void backtomenu()
     {
-        isMuted = isOn;
-        audioMixer.SetFloat("Volume", isMuted ? MIN_VOLUME : volume);
+       /* ApplySettings();*/
+        Debug.Log(PlayerPrefs.GetFloat("Volume"));
+        SceneManager.LoadScene("Main");
     }
 
-    public void SetVolume(float value)
+   /* public void ApplySettings()
     {
-        volume = value;
-        audioMixer.SetFloat("Volume", isMuted ? MIN_VOLUME : volume);
-    }
-
-    public void SaveSettings()
-    {
-        SetPreferences();
-    }
-
-    private void Start()
-    {
-        LoadPreferences();
-        if (!isMuted)
-        {
-            audioMixer.SetFloat("Volume", volume);
-        }
-    }
+        
+    }*/
 }

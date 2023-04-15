@@ -1,10 +1,10 @@
 using UnityEngine;
+using UnityEngine.Audio;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class Buttons : MonoBehaviour
 {
-    public string namascene;
-
     public void loadscene(string namascene)
     {
         SceneManager.LoadScene(namascene);
